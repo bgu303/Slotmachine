@@ -4,17 +4,22 @@ import { useState } from 'react';
 function SlotMachine() {
     const [losingNumbers, setlosingNumbers] = useState([]);
     const [sliderValue, setSliderValue] = useState(1);
-    const [betValue, setBetValue] = useState(0);
+    const [betValue, setBetValue] = useState(1);
     const [loseState, setLoseState] = useState(false);
     const [clickedIndexes, setClickedIndexes] = useState([])
     const [clickedIndexMine, setClickedIndexMine] = useState([])
     const [winAmount, setWinAmount] = useState(0);
     const [winPlusBet, setWinPlusBet] = useState(0);
     const [gameState, setGameState] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(100);
     const boxes = Array.from({ length: 25 });
 
     const handleClick = (index) => {
-        if (loseState === true) {
+        if (loseState === true || gameState === false) {
+            return;
+        }
+
+        if (clickedIndexes.includes(index)) {
             return;
         }
 
@@ -52,12 +57,22 @@ function SlotMachine() {
     }
 
     const play = () => {
+        if (betValue > totalAmount) {
+            alert("You don't have the funds to make the bet");
+            return;
+        }
+
+        if (gameState === true) {
+            return;
+        }
+
         setGameState(true);
         setLoseState(false);
         setClickedIndexes([]);
         setClickedIndexMine([]);
         setWinAmount(0);
         setWinPlusBet(0);
+        setTotalAmount(totalAmount - betValue)
         const newlosingNumbers = new Set();
         while (newlosingNumbers.size < sliderValue) {
             let randomNum = Math.floor(Math.random() * 25);
@@ -68,14 +83,27 @@ function SlotMachine() {
     };
 
     const cashOut = () => {
-        setWinPlusBet(parseFloat(betValue) + parseFloat(winAmount.toFixed(2)));
-        setGameState(false);
+        if (gameState === false) {
+            return;
+        }
+
+        if (loseState !== true) {
+            setWinPlusBet(parseFloat(betValue) + parseFloat(winAmount.toFixed(2)));
+            setTotalAmount(totalAmount + parseFloat(betValue) + parseFloat(winAmount.toFixed(2)));
+            setGameState(false);
+        }
+    }
+
+    const addFunds = () => {
+        setTotalAmount(totalAmount + 1000)
     }
 
     return (
         <>
             <div style={{ textAlign: "center" }}>
                 <h1>Jukka's Mines XD</h1>
+                <h3>Your funds: {totalAmount.toFixed(2)} €</h3>
+                <button onClick={() => addFunds()}>ADD FUNDS</button>
                 <div className="grid-container">
                     {boxes.map((_, index) => (
                         <div
@@ -93,7 +121,7 @@ function SlotMachine() {
                     <span>Mine count: </span><input
                         type="range"
                         min="1"
-                        max="5"
+                        max="10"
                         value={sliderValue}
                         onChange={handleSliderChange}
                         className="slider"
@@ -109,7 +137,7 @@ function SlotMachine() {
                     <button style={{ marginTop: "20" }} onClick={() => play()}>PLAY</button><br />
                     <button style={{ marginTop: "20" }} onClick={() => cashOut()}>CASH OUT</button>
                     {!loseState && <div>Win amount: {winAmount.toFixed(2)} €</div>}
-                    {loseState && <h3>HÄVISIT PELIN</h3>}
+                    {loseState && <h3>YOU LOST THE GAME</h3>}
                     {winPlusBet !== 0 && <div>CASHED OUT: {winPlusBet.toFixed(2)} €</div>}
                 </div>
             </div>
