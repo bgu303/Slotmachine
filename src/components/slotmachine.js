@@ -139,7 +139,7 @@ function SlotMachine() {
                         </div>
                     ))}
                 </div>
-                <div>
+                <div style={{marginTop: 50}}>
                     <span style={{ color: "white" }}>Mine count: </span><input
                         type="range"
                         min="1"
@@ -156,7 +156,7 @@ function SlotMachine() {
                         onChange={handleBetChange}
                         className="slider"
                     /><span style={{ color: "white" }}>{betValue} €</span><br />
-                    <button style={{ marginTop: "20", backgroundColor: "green" }} onClick={() => play()}>PLAY</button><br />
+                    <button style={{ marginTop: 20, backgroundColor: "green" }} onClick={() => play()}>PLAY</button><br />
                     {gameState && <button style={{ marginTop: "20", backgroundColor: "red" }} onClick={() => cashOut()}>CASH OUT</button>}
                     {gameState && <div style={{ color: "white", marginTop: 10 }}>Win amount: {winAmount.toFixed(2)} €</div>}
                     {loseState && <h3 style={{ color: "white", marginTop: 10 }}>YOU HIT A MINE! GAME OVER</h3>}
