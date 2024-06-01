@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/Slotmachine/static/css/main.050d0a5c.css",
-    "main.js": "/Slotmachine/static/js/main.32636a99.js",
+    "main.js": "/Slotmachine/static/js/main.0bed403e.js",
     "static/js/453.94ede833.chunk.js": "/Slotmachine/static/js/453.94ede833.chunk.js",
     "static/media/explosion.mp3": "/Slotmachine/static/media/explosion.ebf7e8f08793d4db5c60.mp3",
     "static/media/bombv2.jpg": "/Slotmachine/static/media/bombv2.3a608a1875ec33400a49.jpg",
     "static/media/blop.mp3": "/Slotmachine/static/media/blop.12bc5a4ebbd2a795480d.mp3",
     "index.html": "/Slotmachine/index.html",
     "main.050d0a5c.css.map": "/Slotmachine/static/css/main.050d0a5c.css.map",
-    "main.32636a99.js.map": "/Slotmachine/static/js/main.32636a99.js.map",
+    "main.0bed403e.js.map": "/Slotmachine/static/js/main.0bed403e.js.map",
     "453.94ede833.chunk.js.map": "/Slotmachine/static/js/453.94ede833.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.050d0a5c.css",
-    "static/js/main.32636a99.js"
+    "static/js/main.0bed403e.js"
   ]
 }
