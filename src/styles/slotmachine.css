@@ -1,8 +1,7 @@
 .containerDiv {
   background-color: black;
-  height: 900px;
-  margin-left: 300px;
-  margin-right: 300px;
+  margin-left: 5%;
+  margin-right: 5%;
   margin-top: 20px;
   border-radius: 20px;
   border: 1px solid #ffffff;
@@ -11,11 +10,12 @@
 .grid-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  width: 410px;
+  gap: 2%; /* A percentage gap */
+  width: 100%; /* Full width of the parent container */
+  max-width: 410px; /* Optional: Maintain a maximum width */
   margin: auto;
-  margin-top: 50px;
-  margin-bottom: 15px;
+  margin-top: 5%; /* Percentage-based margin for responsiveness */
+  margin-bottom: 3%; /* Percentage-based margin for responsiveness */
 }
 
 .grid-item {
@@ -24,7 +24,8 @@
   align-items: center;
   background-color: #4e4e4e;
   border: 1px solid #ffffff;
-  height: 72px;
+  height: 18vw; /* A responsive height based on viewport width */
+  max-height: 72px; /* Optional: Maintain a maximum height */
   border-radius: 3px;
 }
 

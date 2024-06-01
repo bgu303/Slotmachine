@@ -2,6 +2,8 @@ import '../styles/slotmachine.css';
 import { useState } from 'react';
 import blop from "../audio/blop.mp3"
 import explosion from "../audio/explosion.mp3"
+import diamond from "../images/diamondv2.png"
+import bomb from "../images/bombv2.jpg"
 
 function SlotMachine() {
     const [losingNumbers, setlosingNumbers] = useState([]);
@@ -124,9 +126,12 @@ function SlotMachine() {
                 <div className="grid-container">
                     {boxes.map((_, index) => (
                         <div
-                            style={{
-                                backgroundColor: clickedIndexes.includes(index) ? "green" : (clickedIndexMine.includes(index) ? "red" : "")
-                            }}
+                        style={{
+                            backgroundImage: clickedIndexes.includes(index) ? `url(${diamond})` : (clickedIndexMine.includes(index) ? `url(${bomb})` : ""),
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat"
+                        }}
                             onClick={() => handleClick(index)}
                             key={index}
                             className="grid-item"
