@@ -2,6 +2,8 @@ import '../styles/slotmachine.css';
 import { useState } from 'react';
 import blop from "../audio/blop.mp3"
 import explosion from "../audio/explosion.mp3"
+import cashOutSound from "../audio/cashout.mp3"
+import gameStart from "../audio/gameStart.mp3"
 import diamond from "../images/diamondv2.png"
 import bomb from "../images/bombv2.jpg"
 
@@ -16,6 +18,8 @@ function SlotMachine() {
     const [winPlusBet, setWinPlusBet] = useState(0);
     const [gameState, setGameState] = useState(false);
     const [totalAmount, setTotalAmount] = useState(1000);
+    const [animateIndex, setAnimateIndex] = useState(null);
+    const [isBomb, setIsBomb] = useState(false);
     const boxes = Array.from({ length: 25 });
 
     const handleClick = (index) => {
@@ -27,10 +31,13 @@ function SlotMachine() {
             return;
         }
 
+        setAnimateIndex(index);
+        setIsBomb(false);
         new Audio(blop).play();
 
         if (losingNumbers.includes(index)) {
             setLoseState(true);
+            setIsBomb(true);
             setClickedIndexMine(prevClickedIndexes => [...prevClickedIndexes, index]);
             setWinAmount(0);
             new Audio(explosion).play();
@@ -44,14 +51,14 @@ function SlotMachine() {
             let minesRiskFactor = 0;
 
             if (mineValue >= 9) {
-                minesRiskFactor = mineValue / 1.15; //Less rigged values for higher mine counts.
+                minesRiskFactor = mineValue / 1.35; //Less rigged values for higher mine counts.
             }
             else if (mineValue >= 7) {
-                minesRiskFactor = mineValue / 1.5;
+                minesRiskFactor = mineValue / 1;
             } else if (mineValue >= 5) {
-                minesRiskFactor = mineValue / 2;
+                minesRiskFactor = mineValue / 1.5;
             } else {
-                minesRiskFactor = mineValue / 5
+                minesRiskFactor = mineValue / 3
             }
 
             const clicksRiskFactor = (clickedIndexes.length + 1) / 25; // More clicks -> more risk. the + 1 is added so the win starts to accumulating from the first click, not the 2nd.
@@ -85,6 +92,7 @@ function SlotMachine() {
             return;
         }
 
+        new Audio(gameStart).play();
         setGameState(true);
         setLoseState(false);
         setClickedIndexes([]);
@@ -110,6 +118,9 @@ function SlotMachine() {
             setWinPlusBet(parseFloat(betValue) + parseFloat(winAmount.toFixed(2)));
             setTotalAmount(totalAmount + parseFloat(betValue) + parseFloat(winAmount.toFixed(2)));
             setGameState(false);
+            setClickedIndexes([]);
+            setClickedIndexMine([]);
+            new Audio(cashOutSound).play();
         }
     }
 
@@ -126,20 +137,21 @@ function SlotMachine() {
                 <div className="grid-container">
                     {boxes.map((_, index) => (
                         <div
-                        style={{
-                            backgroundImage: clickedIndexes.includes(index) ? `url(${diamond})` : (clickedIndexMine.includes(index) ? `url(${bomb})` : ""),
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat"
-                        }}
+                            style={{
+                                backgroundImage: clickedIndexes.includes(index) ? `url(${diamond})` : (clickedIndexMine.includes(index) ? `url(${bomb})` : ""),
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                backgroundRepeat: "no-repeat"
+                            }}
                             onClick={() => handleClick(index)}
+                            onAnimationEnd={() => setAnimateIndex(null)}
                             key={index}
-                            className="grid-item"
+                            className={`grid-item ${animateIndex === index ? (isBomb ? 'shake-animation' : 'rotate-animation') : ''}`}
                         >
                         </div>
                     ))}
                 </div>
-                <div style={{marginTop: 50}}>
+                <div style={{ marginTop: 50 }}>
                     <span style={{ color: "white" }}>Mine count: </span><input
                         type="range"
                         min="1"
@@ -156,11 +168,13 @@ function SlotMachine() {
                         onChange={handleBetChange}
                         className="slider"
                     /><span style={{ color: "white" }}>{betValue} €</span><br />
-                    <button style={{ marginTop: 20, backgroundColor: "green" }} onClick={() => play()}>PLAY</button><br />
-                    {gameState && <button style={{ marginTop: "20", backgroundColor: "red" }} onClick={() => cashOut()}>CASH OUT</button>}
-                    {gameState && <div style={{ color: "white", marginTop: 10 }}>Win amount: {winAmount.toFixed(2)} €</div>}
-                    {loseState && <h3 style={{ color: "white", marginTop: 10 }}>YOU HIT A MINE! GAME OVER</h3>}
-                    {winPlusBet !== 0 && <div style={{ color: "white", marginTop: 10 }}>CASHED OUT: {winPlusBet.toFixed(2)} €</div>}
+                    <div className="button-container">
+                        {!gameState && <button style={{ backgroundColor: "green" }} onClick={() => play()}>PLAY</button>}
+                        {gameState && <button style={{ backgroundColor: "red" }} onClick={() => cashOut()}>CASH OUT</button>}
+                    </div>
+                    {gameState && <div style={{ color: "white", marginBottom: 10 }}>Win amount: {winAmount.toFixed(2)} €</div>}
+                    {loseState && <h4 style={{ color: "white", marginTop: 5 }}>YOU HIT A MINE! GAME OVER</h4>}
+                    {winPlusBet !== 0 && <div style={{ color: "white", marginBottom: 10 }}>CASHED OUT: {winPlusBet.toFixed(2)} €</div>}
                 </div>
             </div>
         </>
